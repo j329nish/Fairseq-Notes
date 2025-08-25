@@ -1,0 +1,828 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>fairseqの使い方</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.highlight-default_background {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(142, 58, 1, 0.141); }
+.select-value-color-orange { background-color: rgba(213, 96, 0, 0.188); }
+.select-value-color-yellow { background-color: rgba(209, 155, 0, 0.238); }
+.select-value-color-green { background-color: rgba(1, 104, 42, 0.145); }
+.select-value-color-blue { background-color: rgba(0, 108, 191, 0.156); }
+.select-value-color-purple { background-color: rgba(104, 1, 184, 0.125); }
+.select-value-color-pink { background-color: rgba(204, 1, 88, 0.137); }
+.select-value-color-red { background-color: rgba(228, 26, 0, 0.148); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="25a7f2de-9609-8023-a231-c0203c4302a2" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="fairseq.webp"/></div><h1 class="page-title">fairseqの使い方</h1><p class="page-description"></p></header><div class="page-body"><p id="25a7f2de-9609-805a-b7d3-ea0686461087" class="">
+</p><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="25a7f2de-9609-80c8-9d12-e5d4e7ca0bd8"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="25a7f2de-9609-8095-9246-dc77cd9cbf65" class="">fairseqを使うときはscriptsの中で作業をする</p></div></figure><p id="25a7f2de-9609-80d2-be85-c7e5659e6bbf" class="">
+</p><hr id="25a7f2de-9609-807d-b9f4-e79eef785eee"/><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">ディレクトリ構成</summary><div class="indented"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-808c-88da-cef5f9691824" class="code code-wrap"><code class="language-YAML" style="white-space:pre-wrap;word-break:break-all">.venv/
+
+dataset/
+L train/
+  L train.en
+  L train.ja
+L dev/
+  L dev.en
+  L dev.ja
+L test/
+  L test.en
+  L test.ja
+
+*unigram-corpus/ （SentencePieceから作成するデータセット用のディレクトリ）
+L train/
+  L train.en
+  L train.ja
+L dev/
+  L dev.en
+  L dev.ja
+L test/
+  L test.en
+  L test.ja
+
+*spm-model/ （SentencePiece作成時に作られるmodel用のディレクトリ）
+L spm.en
+L spm.ja
+
+*fairseq/ （今回作られるfairseqディレクトリ）
+L logs/
+L results/
+L scripts/  （ここで作業する）</code></pre><p id="25a7f2de-9609-800b-a752-d24e46a983c7" class="">
+</p></div></details><hr id="25a7f2de-9609-8084-8059-fa72671bf0e1"/><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">インストール</summary><div class="indented"><hr id="25a7f2de-9609-8052-8eeb-fc9e2479657c"/><ul id="25a7f2de-9609-8010-912c-cc93dbb3dd73" class="toggle"><li><details open=""><summary>uv環境の構築</summary><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-8087-b34b-c0ea14d2df4e" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">uv init
+uv python pin 3.11
+uv venv
+. .venv/bin/activate</code></pre><p id="25a7f2de-9609-8065-a91a-d66d398458e0" class="">
+</p></details></li></ul><ul id="25a7f2de-9609-8029-9dab-f87ad8e29186" class="toggle"><li><details open=""><summary>fairseqのインストール</summary><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-8027-91f6-cfe5195ca46c" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">git clone https://github.com/pytorch/fairseq
+cd fairseq
+pip install --editable ./</code></pre><p id="25a7f2de-9609-80bb-bf3d-e9e74f8de7a5" class="">
+</p></details></li></ul><ul id="25a7f2de-9609-8034-9457-d3ffd487c529" class="toggle"><li><details open=""><summary>sentencepiece, sacrebleuのインストール</summary><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-801e-8552-e2be2cac775a" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">uv add sentencepiece
+uv add sacrebleu
+uv add sacrebleu[ja]</code></pre><p id="25a7f2de-9609-80db-aca5-dfe984fd5852" class="">
+</p></details></li></ul></div></details><hr id="25a7f2de-9609-8066-81fe-d524bbac366a"/><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">モデルの作成とトークナイズ（SentencePiece）</summary><div class="indented"><hr id="25a7f2de-9609-80c7-917c-f8f2f12ceaf1"/><p id="25a7f2de-9609-80d4-93ce-e901c3dafceb" class=""><code>./fairseq/scripts</code> にmake-dataset.shを作成する。</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-8078-b0bc-eaa028220a0d" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">#!/bin/bash
+
+mkdir -p ../../unigram-corpus
+mkdir -p ../../unigram-corpus/train
+mkdir -p ../../unigram-corpus/dev
+mkdir -p ../../unigram-corpus/test
+mkdir -p ../../spm-model
+
+# sentencepiece model の学習
+spm_train --input=../../dataset/train/train.ja --model_prefix=../../spm-model/spm.ja --vocab_size=16000 --character_coverage=1.0 --model_type=unigram
+spm_train --input=../../dataset/train/train.en --model_prefix=../../spm-model/spm.en --vocab_size=16000 --character_coverage=1.0 --model_type=unigram
+
+for lang in en ja
+do
+    for type in train/train dev/dev test/test
+    do
+    spm_encode --model=../../spm-model/spm.$lang.model --output_format=piece &lt; ../../dataset/$type.$lang &gt; ../../unigram-corpus/$type.$lang
+    done
+done</code></pre><p id="25a7f2de-9609-80ac-bbb6-f73ca5a01f1d" class="">
+</p><p id="25a7f2de-9609-80f0-baab-f1933f73bff2" class="">実行</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-800f-acbe-f6edd0769058" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">chmod +x make-dataset-JC.sh
+./make-dataset-JC.sh</code></pre><p id="25a7f2de-9609-8081-b7f3-db335c7c76f0" class="">
+</p><p id="25a7f2de-9609-807c-82f2-dbf072490c4f" class=""><code>./fairseq/scripts</code> にpreprocess-baseline-JE.shを作成する。</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-80c5-9087-d4a62b7f8364" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">#!/bin/bash
+#SBATCH -J pp-ba-JE         #ジョブ名。なんでもよい。
+#SBATCH -p opus           #指定しなければデフォルトパーテーションはopus、[opus,luce,lepin,ausone,varuna,ganesa,budha,hestia]この中から選ぶ。
+#SBATCH -o ../logs/%x_%j.log #標準出力先。この場合[ジョブ名]_[ジョブID].logというファイル名で保存される。
+#SBATCH -t 3-00:00:00     #ジョブの実行上限時間を指定。days-hours:minutes:seconds
+#SBATCH -c 3              #要求するCPUコア数指定。指定しなければ、1コアが割り当てられる。
+#SBATCH --mem=46GB        #要求するメモリ量。
+#SBATCH --gpus=1          #要求するGPUの枚数。指定しなければGPUは使えない。
+#SBATCH --mail-type=ALL   #ジョブの開始や終了などメールを受け取ることができる。 値はBEGIN, END, FAIL, ALL。メール送信の際は#を1個を外すこと。
+##SBATCH --mail-user=---@ai.cs.ehime-u.ac.jp   #メール送信先。メール送信の際は#を1個を外すこと。
+
+TRAIN_DIR=../../unigram-corpus/train
+VALID_DIR=../../unigram-corpus/dev
+TEST_DIR=../../unigram-corpus/test
+
+fairseq-preprocess \
+    --trainpref $TRAIN_DIR/train \
+    --validpref $VALID_DIR/dev \
+    --testpref $TEST_DIR/test \
+    --source-lang en --target-lang ja \
+    --destdir ../../unigram-corpus \
+    --task translation \
+    --seed 1</code></pre><p id="25a7f2de-9609-80c1-a4d4-e2daae439a6f" class="">実行</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-80c7-8add-d836813c033a" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">sbatch preprocess-baseline-JE.sh</code></pre><p id="25a7f2de-9609-80cb-8ae4-d1bcac902b7b" class="">
+</p></div></details><hr id="25a7f2de-9609-806a-98e6-cb23008b5e45"/><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">翻訳とBLEUによる評価</summary><div class="indented"><hr id="25a7f2de-9609-808d-914c-d462aca2039b"/><p id="25a7f2de-9609-8091-a150-fb736bcb6d41" class="">ディレクトリの準備</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-80a4-93e4-c70f2f3336b4" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">mkdir -p ../results</code></pre><p id="25a7f2de-9609-80fc-9826-e7e87f0e9d94" class="">
+</p><h3 id="25a7f2de-9609-8062-8a48-f9e0128dc50a" class="">訓練</h3><p id="25a7f2de-9609-805e-b26a-e3d82bb9c563" class=""><code>./fairseq/scripts</code> にtrain-fairseq-baseline-en-ja.shを作成する。</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-8002-a978-c90e5bc4d1d2" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">#!/bin/bash
+#SBATCH -J TrFbaE2J       #ジョブ名。なんでもよい。
+#SBATCH -p opus           #指定しなければデフォルトパーテーションはopus、[opus,luce,lepin,ausone,varuna,ganesa,budha,hestia]この中から選ぶ。
+#SBATCH -o ../logs/%x_%j.log #標準出力先。この場合[ジョブ名]_[ジョブID].logというファイル名で保存される。
+#SBATCH -t 3-00:00:00     #ジョブの実行上限時間を指定。days-hours:minutes:seconds
+#SBATCH -c 3              #要求するCPUコア数指定。指定しなければ、1コアが割り当てられる。
+#SBATCH --mem=46GB        #要求するメモリ量。
+#SBATCH --gpus=1          #要求するGPUの枚数。指定しなければGPUは使えない。
+#SBATCH --mail-type=ALL   #ジョブの開始や終了などメールを受け取ることができる。 値はBEGIN, END, FAIL, ALL。メール送信の際は#を1個を外すこと。
+##SBATCH --mail-user=---@ai.cs.ehime-u.ac.jp   #メール送信先。メール送信の際は#を1個を外すこと。
+
+. ../../.venv/bin/activate
+fairseq-train ../../unigram-corpus \
+    --task translation \
+    --arch transformer \
+    --source-lang &quot;en&quot; --target-lang &quot;ja&quot; \
+    --max-epoch 30 \
+    --batch-size 128 \
+    --optimizer adam \
+    --lr 1e-4 \
+    --ddp-backend no_c10d \
+    --seed 1 \
+    --save-dir ../results/checkpoints \
+| tee -a ../results/train.log</code></pre><p id="25a7f2de-9609-80d7-a801-de39742954f6" class="">
+</p><h3 id="25a7f2de-9609-8032-87b2-f1e323f80b8b" class="">評価</h3><p id="25a7f2de-9609-809c-8c69-eacde7dc3c96" class=""><code>./fairseq/scripts</code> にtest-fairseq-baseline-en-ja.shを作成する。</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="25a7f2de-9609-809f-942f-c7016f68a375" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">#!/bin/bash
+#SBATCH -J TeFbaE2J       #ジョブ名。なんでもよい。
+#SBATCH -p opus           #指定しなければデフォルトパーテーションはopus、[opus,luce,lepin,ausone,varuna,ganesa,budha,hestia]この中から選ぶ。
+#SBATCH -o ../logs/%x_%j.log #標準出力先。この場合[ジョブ名]_[ジョブID].logというファイル名で保存される。
+#SBATCH -t 3-00:00:00     #ジョブの実行上限時間を指定。days-hours:minutes:seconds
+#SBATCH -c 3              #要求するCPUコア数指定。指定しなければ、1コアが割り当てられる。
+#SBATCH --mem=46GB        #要求するメモリ量。
+#SBATCH --gpus=1          #要求するGPUの枚数。指定しなければGPUは使えない。
+#SBATCH --mail-type=ALL   #ジョブの開始や終了などメールを受け取ることができる。 値はBEGIN, END, FAIL, ALL。メール送信の際は#を1個を外すこと。
+##SBATCH --mail-user=---@ai.cs.ehime-u.ac.jp   #メール送信先。メール送信の際は#を1個を外すこと。
+
+. ../../.venv/bin/activate
+#英日翻訳
+mkdir -p ../results/generate
+fairseq-interactive ../../unigram-corpus \
+    --input ../../unigram-corpus/test/test.en \
+    --path ../results/checkpoints/checkpoint_best.pt \
+    --task translation \
+    --nbest 1 \
+&gt; ../results/generate/result.txt
+
+#翻訳結果の文の抽出
+grep ^H ../results/generate/result.txt | sort -V | cut -f 3- &gt; ../results/generate/result.sys
+
+# デトークナイズ
+spm_decode --model=&#x27;../../spm-model/spm.ja.model&#x27; --input_format=piece &lt; ../results/generate/result.sys &gt; ../results/generate/pred.ja
+
+#BLEUスコア
+sacrebleu ../../dataset/test/test.ja -i ../results/generate/pred.ja --tokenize ja-mecab -b</code></pre></div></details><hr id="25a7f2de-9609-805b-9cdb-c1d23c64cc04"/><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">参考文献</summary><div class="indented"><hr id="25a7f2de-9609-80ac-869e-d7714ce303d2"/><p id="25a7f2de-9609-8012-a803-c0425b71c36e" class=""> </p><figure id="25a7f2de-9609-804c-82e7-dbc7cd3830db"><a href="https://fairseq.readthedocs.io/en/latest/command_line_tools.html#fairseq-train" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Command-line Tools — fairseq 0.12.2 documentation</div><div class="bookmark-description">Fairseq provides several command-line tools for training and evaluating models:</div></div><div class="bookmark-href"><img src="https://fairseq.readthedocs.io/favicon.ico" class="icon bookmark-icon"/>https://fairseq.readthedocs.io/en/latest/command_line_tools.html#fairseq-train</div></div></a></figure><figure id="25a7f2de-9609-803e-9491-e2b1bfaca984"><a href="https://github.com/mjpost/sacrebleu" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">GitHub - mjpost/sacrebleu: Reference BLEU implementation that auto-downloads test sets and reports a version string to facilitate cross-lab comparisons</div><div class="bookmark-description">Reference BLEU implementation that auto-downloads test sets and reports a version string to facilitate cross-lab comparisons - mjpost/sacrebleu</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/mjpost/sacrebleu</div></div><img src="https://opengraph.githubassets.com/6523ad8b07cc3a3ddc83c8a542cf98b9ba1f206d783cf3c84f404f672443078e/mjpost/sacrebleu" class="bookmark-image"/></a></figure></div></details><hr id="25a7f2de-9609-80b1-bb41-dd193741f20a"/><p id="25a7f2de-9609-80e1-95e1-de7cae821f9a" class="">
+</p><p id="25a7f2de-9609-8052-9440-dcdede5c7f38" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
